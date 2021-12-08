@@ -1,15 +1,19 @@
 from gif import *
 import os
 
+
 if __name__ == "__main__":
     start=1
     while(start==1):
-        count = input("請輸入波數：")
-        a=[]
-        for i in range(int(count)):
-            tmp =  input(f"請輸入第{i+1}個波的位置：").split(',')
-            i={"x":tmp[0],"y":tmp[1]}
-            a.append(i)
+        try:
+            count = input("請輸入波數：")
+            a=[]
+            for i in range(int(count)):
+                tmp =  input(f"請輸入第{i+1}個波的位置：").split(',')
+                i={"x":tmp[0],"y":tmp[1]}
+                a.append(i)
+        except:
+            print("====================\n\n**存取資料時發生錯誤**\n\n====================")
         os.system("cls")
         print("====================\n\n**正在處理資料**\n\n====================")
         getgif(a)
