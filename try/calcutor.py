@@ -1,46 +1,72 @@
 import math
+from os import replace, system
+
+from mathonly.Trigonometric import *
+from mathonly.sqrl import *
 
 
-reply = ['x','^']
-replyto = ['*','**']
-mathid = ['sin','cos','tan']
+reply = [['*','x','×','ｘ','＊'],
+['**','^','︿','＊＊'],
+['+','＋'],
+['-','－'],
+['/','／'],
+]
+
+mathid = ['sin','cos','tan','csc','sec','cot','log']
+
+
+
+def calcu(text):
+    text = (text.replace('(','')).replace(')','')
+    print(text)
+    text = eval(text)
+    return str(text)
+
+
 
 def get(text):
-    for i in mathid:
-        if(text.find(i)!=-1):
-            fromnum = 0
-            up = 0
-            while(text.find("(",fromnum)!=-1):
-                up+=1
-                fromnum = text.find("(",fromnum)+1
-            while(text.find(")",fromnum)!=-1):
-                up-=1
-                fromnum = text.find(")",fromnum)+1
-                if up == 0:
-                    end = fromnum-1
-                    break
-            pos = text[(text.find(i)):fromnum]
-            gettext = get(pos[len(i)+1:end])
-            text = text.replace(pos,gettext,1)
-
-        gettext = str(eval(str(text[:text.find(")")])))
-        print(text)
-        count = eval(str(text))
-        if(i == 'sin'):
-            print(gettext)
-            gettext = str(math.sin((math.pi/180)*float(count)))
-            print(gettext)
-        elif(i == 'cos'):
-            gettext = str(math.cos((math.pi/180)*float(count)))
-        elif(i == 'tan'):
-            gettext = str(math.tan((math.pi/180)*float(count)))
-
-        #number=eval(text[len(i)+1:])
-        #print(number)
+    text = str(text)
+    while(text.find(")")!=-1):
+        count = text.find(")")
+        while(text[count]!="("):
+            count -=1
+            if(count==-1):
+                return "括弧放置錯誤"
+        getto = text[count:text.find(")")+1]
+        turnto = calcu(getto)
+        for i in range(len(mathid)):
+            if(text[count-3:].find(mathid[i])==0):
+                if(i==0):
+                    turnto = str(sin(float(turnto)))
+                elif(i==1):
+                    turnto = str(cos(float(turnto)))
+                elif(i==2):
+                    turnto = str(tan(float(turnto)))
+                    if(turnto=="tan極端值(錯誤)"):
+                        return "tan極端值(錯誤)"
+                elif(i==3):
+                    turnto = str(csc(float(turnto)))
+                elif(i==4):
+                    turnto = str(sec(float(turnto)))
+                elif(i==5):
+                    turnto = str(cot(float(turnto)))
+                    if(turnto=="cot極端值(錯誤)"):
+                        return "cot極端值(錯誤)"
+                elif(i==6):
+                    turnto = str(log(turnto))
+                    if(turnto=="對數給予資料錯誤"):
+                        return "對數給予資料錯誤"
+                
+                getto = mathid[i]+getto
+        text = text.replace(getto,turnto)
+    text = eval(text)
     
-    return gettext
+    return text
 
-Text = "sin(90)="
+
+Text = "sin(sin(90)*30)="
+Text = Text[:-1]
 for i in range(len(reply)):
-    Text = Text.replace(reply[i],replyto[i])
+        for j in range(1,len(reply[i])):
+            Text = Text.replace(reply[i][j],reply[i][0])
 print(get(Text))
