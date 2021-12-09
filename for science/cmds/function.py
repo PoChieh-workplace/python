@@ -8,7 +8,7 @@ def func(x, y, t, list):
     first=0
     for i in list:
         r=numpy.sqrt((x-int(i['x']))**2 + (y-int(i['y']))**2)
-        tmp = numpy.exp(j*k*r)/r
+        tmp = (numpy.exp(j*k*r)/r)*float(i['lambda'])
         if(first==0):
             z = tmp
             first+=1
